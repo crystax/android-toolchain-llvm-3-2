@@ -129,6 +129,7 @@ const char *Triple::getOSTypeName(OSType Kind) {
   case Minix: return "minix";
   case RTEMS: return "rtems";
   case NativeClient: return "nacl";
+  case NDK: return "ndk";
   case CNK: return "cnk";
   case Bitrig: return "bitrig";
   case AIX: return "aix";
@@ -278,6 +279,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("minix", Triple::Minix)
     .StartsWith("rtems", Triple::RTEMS)
     .StartsWith("nacl", Triple::NativeClient)
+    .StartsWith("ndk", Triple::NDK)
     .StartsWith("cnk", Triple::CNK)
     .StartsWith("bitrig", Triple::Bitrig)
     .StartsWith("aix", Triple::AIX)
