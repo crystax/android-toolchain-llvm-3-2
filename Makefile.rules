@@ -733,7 +733,6 @@ CPP.Flags     += $(sort -I$(PROJ_OBJ_DIR) -I$(PROJ_SRC_DIR) \
 	         $(PROJ_OBJ_ROOT) $(PROJ_SRC_ROOT) \
 	         $(LLVM_OBJ_ROOT) $(LLVM_SRC_ROOT))) \
 	         $(CPP.BaseFlags)
-
 ifeq ($(INCLUDE_BUILD_DIR),1)
   CPP.Flags   += -I$(ObjDir)
 endif
@@ -923,7 +922,7 @@ $(ParallelTargets) :
 	  DD=$(@D); \
 	  if [ ! -f $$SD/Makefile ]; then \
 	    SD=$(@D); \
-	    DD=$(notdir $(@D)); \
+	    DD=$(shell echo $(notdir $(@D)) | sed 's/-[0-9]\+\(\.[0-9]\+\)*$$//'); \
 	  fi; \
 	  if ([ ! -f $$DD/Makefile ] || \
 	            command test $$DD/Makefile -ot \
