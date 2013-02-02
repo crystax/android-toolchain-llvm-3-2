@@ -60,7 +60,7 @@ using namespace llvm;
 
 static cl::opt<bool>
 DisableColoring("no-stack-coloring",
-        cl::init(false), cl::Hidden,
+        cl::init(true), cl::Hidden,
         cl::desc("Disable stack coloring"));
 
 /// The user may write code that uses allocas outside of the declared lifetime
