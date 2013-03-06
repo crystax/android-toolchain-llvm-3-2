@@ -43,6 +43,8 @@ static const uint32_t kAndroidHeaderVersion = 0;
 static const uint32_t kAndroidTargetAPI = 0;
 static const uint32_t kAndroidDefaultCompilerVersion = 0;
 static const uint32_t kAndroidDefaultOptimizationLevel = 3;
+static const uint32_t kAndroidBitcodeType = 0;
+static const uint32_t kAndroidLDFlags = 0;
 
 // PNaCl bitcode version number.
 static const uint32_t kPnaclBitcodeVersion = 0;
@@ -64,6 +66,8 @@ BitcodeWrapperer::BitcodeWrapperer(WrapperInput* infile, WrapperOutput* outfile)
       android_target_api_(kAndroidTargetAPI),
       android_compiler_version_(kAndroidDefaultCompilerVersion),
       android_optimization_level_(kAndroidDefaultOptimizationLevel),
+      android_bitcode_type_(kAndroidBitcodeType),
+      android_ldflags_(kAndroidLDFlags),
       pnacl_bc_version_(0),
       error_(false) {
   buffer_.resize(kBitcodeWrappererBufferSize);
@@ -226,24 +230,51 @@ bool BitcodeWrapperer::ParseWrapperHeader() {
         return false;
       }
 
-      struct IntFieldHelper {
+      struct FieldHelper {
         BCHeaderField::FixedSubfield tag;
-        uint16_t len;
-        uint32_t val;
+        BCHeaderField::FixedSubfield len;
+        union {
+          uint32_t int32;
+          uint8_t* char8;
+        }val;
       };
-      IntFieldHelper tempIntField;
+      FieldHelper tempField;
 
       switch (field.getID()) {
         case BCHeaderField::kAndroidCompilerVersion:
-          if (field.Write((uint8_t*)&tempIntField,
-                          sizeof(tempIntField))) {
-            android_compiler_version_ = tempIntField.val;
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_compiler_version_ = tempField.val.int32;
           }
           break;
         case BCHeaderField::kAndroidOptimizationLevel:
-          if (field.Write((uint8_t*)&tempIntField,
-                          sizeof(tempIntField))) {
-            android_optimization_level_ = tempIntField.val;
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_optimization_level_ = tempField.val.int32;
+          }
+          break;
+        case BCHeaderField::kAndroidBitcodeType:
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_bitcode_type_ = tempField.val.int32;
+          }
+          break;
+        case BCHeaderField::kAndroidLDFlags:
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_ldflags_ = tempField.val.int32;
+          }
+          break;
+        case BCHeaderField::kAndroidSOName:
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_soname_ = (char *) tempField.val.char8;
+          }
+          break;
+        case BCHeaderField::kAndroidDependLibrary:
+          if (field.Write((uint8_t*)&tempField,
+                          sizeof(tempField))) {
+            android_dependent_library_.push_back((char *)tempField.val.char8);
           }
           break;
         default:
