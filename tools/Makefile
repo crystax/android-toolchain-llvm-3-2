@@ -35,7 +35,7 @@ PARALLEL_DIRS := opt llvm-as llvm-dis \
                  llvm-diff macho-dump llvm-objdump llvm-readobj \
 	         llvm-rtdyld llvm-dwarfdump llvm-cov \
 	         llvm-size llvm-stress llvm-mcmarkup \
-                 le32-none-ndk-link
+                 le32-none-ndk-link le32-none-ndk-strip
 
 # Let users override the set of tools to build from the command line.
 ifdef ONLY_TOOLS
