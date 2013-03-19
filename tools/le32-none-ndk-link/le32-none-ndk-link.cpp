@@ -295,7 +295,7 @@ static void WrapAndroidBitcode(std::vector<std::string*> &BCStrings, raw_ostream
 
   // Delete field data
   for (unsigned i = 0 ; i < field_data.size(); ++i) {
-    delete field_data[i];
+    delete [] field_data[i];
   }
 
   for (unsigned i = 0 ; i < BCStrings.size(); ++i) {
