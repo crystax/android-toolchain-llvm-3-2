@@ -961,7 +961,11 @@ enum {
   // sets this flag besides being able to refer to data in a section that does
   // not set it; likewise, a small code model object can refer only to code in a
   // section that does not set this flag.
-  SHF_X86_64_LARGE = 0x10000000
+  SHF_X86_64_LARGE = 0x10000000,
+
+  // All sections with the GPREL flag are grouped into a global data area
+  // for faster accesses
+  SHF_HEX_GPREL = 0x10000000
 };
 
 // Section Group Flags
